@@ -4,19 +4,11 @@ const controller = require("./controller");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  // console.log(req.headers);
-  // res.header({
-  //   "custom-header": "Nuestro valor personalizado",
-  // });
-  // response.success(req, res, "Lista de mensajes |GET");
-  // res.send("Lista de mensajes GET");
-  console.log("holas");
-
-  const filterMessages = req.query.user || null;
+  const filterName = req.query.name || null;
 
   try {
-    const messageList = await controller.getMessages(filterMessages);
-    response.success(req, res, messageList, 200);
+    const nameList = await controller.getUsers(filterName);
+    response.success(req, res, nameList, 200);
   } catch (error) {
     response.error(req, res, "Unexpected Error: ", 400, error);
   }
@@ -24,9 +16,9 @@ router.get("/", async (req, res) => {
 
 router.post("/", (req, res) => {
   controller
-    .addMessage(req.body.user, req.body.message)
-    .then((fullMessage) => {
-      response.success(req, res, fullMessage, 201);
+    .addUser(req.body.name)
+    .then((data) => {
+      response.success(req, res, data, 201);
     })
     .catch((error) => {
       response.error(req, res, "Invalid information", 400, error);
@@ -34,9 +26,8 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/:id", async (req, res) => {
-  // console.log(req.params.id);
   await controller
-    .updateMessage(req.params.id, req.body.message)
+    .updateUser(req.params.id, { name: req.body.name })
     .then((data) => {
       response.success(req, res, data, 200);
     })
@@ -51,9 +42,9 @@ router.delete("/:id", async (req, res) => {
   // res.success(req, res, "Eliminado correctamente |DELETE");
   // res.send("¡Hola! " + req.body.text + " esta es una respuesta desde DELETE");
   await controller
-    .deleteMessage(req.params.id)
+    .deleteUser(req.params.id)
     .then(() => {
-      response.success(req, res, `Message ${req.params.id} removed`, 200);
+      response.success(req, res, `User ${req.params.id} removed`, 200);
     })
     .catch((e) => {
       response.error(req, res, "Unexpected Error", 400, e);

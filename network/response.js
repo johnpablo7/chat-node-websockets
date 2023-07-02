@@ -3,9 +3,7 @@ exports.success = (req, res, message, status) => {
 };
 
 exports.error = (req, res, message, status, details) => {
-  console.error(
-    `${new Date()}: Ha ocurrido un nuevo error, detalle: ${details}`
-  );
+  console.error(`${new Date()}: A new error has occurred, detail: ${details}`);
 
   res.status(status || 500).send({ error: message, body: "" });
 };

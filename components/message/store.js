@@ -1,30 +1,50 @@
 const Model = require("./model");
 
-// const list = [];
-
 function addMessage(message) {
-  // list.push(message);
   const myMessage = new Model(message);
-  myMessage.save();
+  return myMessage.save();
 }
 
-async function getMessages() {
-  // return list;
-  const messages = await Model.find();
-  return messages;
+async function getMessages(filterByUser) {
+  // let filterUser = filterByUser ? { user: new RegExp(filterByUser, "i") } : {};
+
+  let filterUser = {};
+
+  if (filterByUser !== null) {
+    filterUser = { user: filterByUser };
+  }
+
+  return Model.find(filterUser).populate("user").exec();
+
+  // const messages = await Model.find(filterUser);
+  // if (messages.length !== 0) {
+  //   return messages;
+  // } else {
+  //   console.log("User not found in the database");
+  //   return "User not found";
+  // }
 }
 
 async function updateText(id, message) {
   const updatedMessage = await Model.findByIdAndUpdate(
     id,
     { message },
-    { new: true }
+    {
+      returnDocument: "after",
+    }
   );
   return updatedMessage;
+}
+
+function removeMessage(id) {
+  return Model.deleteOne({
+    _id: id,
+  });
 }
 
 module.exports = {
   add: addMessage,
   list: getMessages,
-  updateText,
+  update: updateText,
+  remove: removeMessage,
 };

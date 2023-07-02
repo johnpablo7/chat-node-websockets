@@ -6,11 +6,10 @@ const dbConnection = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-
-    console.log("Base de datos Online");
+    console.log("Online database");
   } catch (error) {
     console.log(error);
-    throw new Error("Error a la hora de inicializar la base de datos");
+    throw new Error("Error when initializing the database");
   }
 };
 
