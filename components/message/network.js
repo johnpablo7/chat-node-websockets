@@ -1,7 +1,13 @@
 const express = require("express");
+const multer = require("multer");
+
 const response = require("../../network/response");
 const controller = require("./controller");
 const router = express.Router();
+
+const upload = multer({
+  dest: "public/files/",
+});
 
 router.get("/", async (req, res) => {
   // console.log(req.headers);
@@ -10,7 +16,6 @@ router.get("/", async (req, res) => {
   // });
   // response.success(req, res, "Lista de mensajes |GET");
   // res.send("Lista de mensajes GET");
-  console.log("holas");
 
   const filterMessages = req.query.user || null;
 
@@ -22,9 +27,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", upload.single("file"), (req, res) => {
+  // console.log(req.file);
+
   controller
-    .addMessage(req.body.user, req.body.message)
+    .addMessage(req.body.user, req.body.message, req.body.chat, req.file)
     .then((fullMessage) => {
       response.success(req, res, fullMessage, 201);
     })

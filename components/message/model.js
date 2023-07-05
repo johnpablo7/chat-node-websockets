@@ -10,7 +10,12 @@ const mySchema = new Schema({
     type: String,
     required: true,
   },
+  chat: {
+    type: Schema.ObjectId,
+    ref: "Chat",
+  },
   date: Date,
+  file: String,
 });
 
 const model = mongoose.model("Message", mySchema);
